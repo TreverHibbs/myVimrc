@@ -91,7 +91,7 @@ nnoremap <F5> :silent update<Bar>silent !firefox %:p:s?\(.\{-}/\)\{4}?http://loc
 " See |filetypes|.
 " Filetype detection.
 
-filetype plugin indent on
+filetype plugin on
 
 
 
@@ -107,6 +107,9 @@ set smarttab
 " 1 tab == 4 spaces
 set shiftwidth=4
 set tabstop=4 softtabstop=4
+
+" 1 tab == 2 spaces when file type is html,js, or css
+autocmd FileType json,html,javascript,css,scss,tex setlocal shiftwidth=2 tabstop=2 softtabstop=2
 
 " Linebreak on 500 characters
 set lbr
@@ -149,8 +152,17 @@ set undofile
 
 call plug#begin('~/.vim/plugged')
 
+Plug 'peterhoeg/vim-qml'
+Plug 'edtsft/vim-qrc'
+" latex plugin for vim
+Plug 'lervag/vimtex'
 
 call plug#end()
+
+"""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
+" => vimtex
+"""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
+let g:tex_flavor = 'latex'
 
 """""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
 " => Color
@@ -164,6 +176,7 @@ set background=dark
 " => FINDING FILES
 """""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
 set path+=**
+set wildignore+=**/node_modules/**
 
 """""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
 " => Tag Jumping

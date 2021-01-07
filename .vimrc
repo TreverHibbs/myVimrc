@@ -63,16 +63,18 @@ set noerrorbells visualbell t_vb=
 " sometimes be convenient.
 set mouse+=a
 
+" Map system keyboard to vim's paste buffer.
+set clipboard=unnamedplus
+
+" Map leader key to a more reachable option namely space.
+let mapleader = " "
+
 " Try to prevent bad habits like using the arrow keys for movement. This is
 " not the only possible bad habit. For example, holding down the h/j/k/l keys
 " for movement, rather than using more efficient movement commands, is also a
 " bad habit. The former is enforceable through a .vimrc, while we don't know
 " how to prevent the latter.
 " Do this in normal mode...
-nnoremap <Left>  :echoe "Use h"<CR>
-nnoremap <Right> :echoe "Use l"<CR>
-nnoremap <Up>    :echoe "Use k"<CR>
-nnoremap <Down>  :echoe "Use j"<CR>
 " ...and in insert mode
 inoremap <Left>  <ESC>:echoe "Use h"<CR>
 inoremap <Right> <ESC>:echoe "Use l"<CR>
@@ -94,6 +96,21 @@ nnoremap <F5> :silent update<Bar>silent !firefox %:p:s?\(.\{-}/\)\{4}?http://loc
 filetype plugin on
 
 
+"""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
+" => Vim file explorer configurations
+"""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
+
+
+
+"""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
+" => Vim tiling controls
+"""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
+" resize splits within arrow key
+map <right> <C-W>>
+map <up>    <C-W>+
+map <down>  <C-W>-
+map <left>  <C-W><
+
 
 """""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
 " => Text, tab and indent related
@@ -109,7 +126,7 @@ set shiftwidth=4
 set tabstop=4 softtabstop=4
 
 " 1 tab == 2 spaces when file type is html,js, or css
-autocmd FileType json,html,javascript,css,scss,tex setlocal shiftwidth=2 tabstop=2 softtabstop=2
+autocmd FileType typescript.tsx,typescript,json,html,javascript,css,scss,tex setlocal shiftwidth=2 tabstop=2 softtabstop=2
 
 " Linebreak on 500 characters
 set lbr
@@ -156,31 +173,82 @@ Plug 'peterhoeg/vim-qml'
 Plug 'edtsft/vim-qrc'
 " latex plugin for vim
 Plug 'lervag/vimtex'
+Plug 'peitalin/vim-jsx-typescript'
+Plug 'vim-airline/vim-airline'
+Plug 'vim-airline/vim-airline-themes'
+Plug 'edkolev/tmuxline.vim'
+Plug 'ap/vim-css-color'
+Plug 'dylanaraps/wal.vim'
+Plug 'junegunn/fzf', { 'do': { -> fzf#install() } }
+Plug 'maxmellon/vim-jsx-pretty'
+Plug 'Chiel92/vim-autoformat'
+Plug 'tpope/vim-eunuch'
+Plug 'fatih/vim-go', { 'do': ':GoUpdateBinaries' }
 
 call plug#end()
+
+"""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
+" => fzf-config
+"""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
+map <leader>o <ESC>:FZF<CR>
+
+"""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
+" => vim-airline-settings
+"""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
+let g:airline_theme='base16_adwaita'
+let g:airline#extensions#tabline#enabled = 1
+let g:airline_powerline_fonts = 1
 
 """""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
 " => vimtex
 """""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
 let g:tex_flavor = 'latex'
+let g:vimtex_context_pdf_viewer = 'zathura'
+let g:vimtex_view_method = 'zathura'
 
 """""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
 " => Color
 """""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
 
 set colorcolumn=80
-hi ColorColumn ctermbg=0 guibg=LightGray
-set background=dark
+if $COLORTERM == 'gnome-terminal'
+    set t_Co=256
+endif
+
+" set colorscheme for compatibility with pywal tool
+colorschem wal
+
+" set the color of the right column to 5
+hi ColorColumn ctermbg=1
 
 """""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
 " => FINDING FILES
 """""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
-set path+=**
-set wildignore+=**/node_modules/**
+"set path+=**
+"set wildignore+=**/node_modules/**
 
 """""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
 " => Tag Jumping
 """""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
 
 command! MakeTags !ctags -R .
+command! MakeNodeTags !ctags --exclude=.git --exclude=node_modules --exclude=package.json --exclude=package-lock.json --exclude=tsconfig.json -R .
+
+"""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
+" => Formatting Macro
+"""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
+noremap <F3> :Autoformat<CR>
+command! FormatJson %!python -m json.tool
+
+"""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
+" => Change the local/global Directory to Directory of Current file
+"""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
+command LCDC lcd %:p:h
+command CDC cd %:p:h
+
+"""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
+" => Snippets
+"""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
+nnoremap <leader>html :-1read $HOME/.vim/.skeleton.html
+
 

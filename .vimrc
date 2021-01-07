@@ -250,5 +250,7 @@ command CDC cd %:p:h
 " => Snippets
 """""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
 nnoremap <leader>html :-1read $HOME/.vim/.skeleton.html
+nnoremap <leader>scss :-1read $HOME/.vim/.skeleton.scss
+nnoremap <leader>js :-1read $HOME/.vim/.skeleton.js
 
 
